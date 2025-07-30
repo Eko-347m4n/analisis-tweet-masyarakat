@@ -1,20 +1,16 @@
 import pandas as pd
-from datetime import timedelta
 
-file_path = "cleaned_data.csv"
+# Baca data mentah dari kedua file
+df1 = pd.read_csv('generasi_emas_2045.csv')
+df2 = pd.read_csv('generasi_emas1_2045.csv')
 
-df = pd.read_csv(file_path)
+# Gabungkan kedua dataframe
+df = pd.concat([df1, df2], ignore_index=True)
 
-# Konversi kolom 'created_at' ke datetime
-df['created_at'] = pd.to_datetime(df['created_at'], format='%I:%M %p %b %d, %Y')
+# Pilih kolom yang diinginkan
+df_cleaned = df[['created_at', 'full_text', 'tweet_url']]
 
-# Tambahkan 7 jam ke kolom 'created_at'
-df['created_at'] = df['created_at'] + timedelta(hours=7)
+# Simpan ke file baru
+df_cleaned.to_csv('cleaned_data.csv', index=False)
 
-# Format kolom 'created_at' kembali ke format yang diinginkan
-df['created_at'] = df['created_at'].dt.strftime('%I:%M %p %b %d, %Y')
-
-# Simpan data yang sudah diperbarui ke file yang sama
-df.to_csv(file_path, index=False)
-
-print(f"7 jam telah ditambahkan ke kolom created_at di {file_path}")
+print("cleaned_data.csv berhasil dibuat dengan kolom yang dipilih dari kedua file sumber.")
